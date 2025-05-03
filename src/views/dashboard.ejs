@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Heart Transplant System | Dashboard</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="bg-light">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container">
+      <a class="navbar-brand" href="/dashboard">Heart Transplant System</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="/dashboard">Dashboard</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" id="nav-donor-tab" data-bs-toggle="tab" href="#donor-registration">Donor Registration</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" id="nav-recipient-tab" data-bs-toggle="tab" href="#recipient-registration">Recipient Registration</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+              <%= user.hospitalName %>
+            </a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="/api/auth/logout">Logout</a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  
+  <div class="container mt-4">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card shadow mb-4">
+          <div class="card-body">
+            <h2>Welcome, <%= user.hospitalName %></h2>
+            <p>Use the tabs below to navigate between donor and recipient registration forms.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="tab-content" id="myTabContent">
+      <!-- Dashboard Tab -->
+      <div class="tab-pane fade show active" id="dashboard">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="card shadow mb-4">
+              <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Recent Donors</h5>
+              </div>
+              <div class="card-body" id="recent-donors">
+                <div class="spinner-border text-primary" role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="card shadow mb-4">
+              <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Recent Recipients</h5>
+              </div>
+              <div class="card-body" id="recent-recipients">
+                <div class="spinner-border text-primary" role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Donor Registration Tab -->
+      <div class="tab-pane fade" id="donor-registration">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="card shadow">
+              <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Donor Registration</h5>
+              </div>
+              <div class="card-body">
+                <form id="donor-form">
+                  <div class="row mb-3">
+                    <div class="col-md-6">
+                      <label for="donorName" class="form-label">Full Name</label>
+                      <input type="text" class="form-control" id="donorName" name="name" required>
+                    </div>
+                    <div class="col-md-3">
+                      <label for="donorAge" class="form-label">Age</label>
+                      <input type="number" class="form-control" id="donorAge" name="age" min="1" max="120" required>
+                    </div>
+                    <div class="col-md-3">
+                      <label for="donorGender" class="form-label">Gender</label>
+                      <select class="form-select" id="donorGender" name="gender" required>
+                        <option value="" disabled selected>Select Gender</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                      </select>
+                    </div>
+                  </div>
+                  
+                  <div class="row mb-3">
+                    <div class="col-md-4">
+                      <label for="donorBloodType" class="form-label">Blood Type</label>
+                      <select class="form-select" id="donorBloodType" name="bloodType" required>
+                        <option value="" disabled selected>Select Blood Type</option>
+                        <option value="A+">A+</option>
+                        <option value="A-">A-</option>
+                        <option value="B+">B+</option>
+                        <option value="B-">B-</option>
+                        <option value="AB+">AB+</option>
+                        <option value="AB-">AB-</option>
+                        <option value="O+">O+</option>
+                        <option value="O-">O-</option>
+                      </select>
+                    </div>
+                    <div class="col-md-4">
+                      <label for="donorOrganType" class="form-label">Organ Type</label>
+                      <select class="form-select" id="donorOrganType" name="organType" disabled>
+                        <option value="Heart" selected>Heart</option>
+                      </select>
+                      <small class="text-muted">Currently only heart transplants are supported</small>
+                    </div>
+                    <div class="col-md-4">
+                      <label for="donorHlaType" class="form-label">HLA Type (if known)</label>
+                      <input type="text" class="form-control" id="donorHlaType" name="hlaType">
+                    </div>
+                  </div>
+                  
+                  <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-primary">Register Donor</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Recipient Registration Tab -->
+      <div class="tab-pane fade" id="recipient-registration">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="card shadow">
+              <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Recipient Registration</h5>
+              </div>
+              <div class="card-body">
+                <form id="recipient-form">
+                  <div class="row mb-3">
+                    <div class="col-md-6">
+                      <label for="recipientName" class="form-label">Full Name</label>
+                      <input type="text" class="form-control" id="recipientName" name="name" required>
+                    </div>
+                    <div class="col-md-3">
+                      <label for="recipientAge" class="form-label">Age</label>
+                      <input type="number" class="form-control" id="recipientAge" name="age" min="1" max="120" required>
+                    </div>
+                    <div class="col-md-3">
+                      <label for="recipientGender" class="form-label">Gender</label>
+                      <select class="form-select" id="recipientGender" name="gender" required>
+                        <option value="" disabled selected>Select Gender</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                      </select>
+                    </div>
+                  </div>
+                  
+                  <div class="row mb-3">
+                    <div class="col-md-3">
+                      <label for="recipientBloodType" class="form-label">Blood Type</label>
+                      <select class="form-select" id="recipientBloodType" name="bloodType" required>
+                        <option value="" disabled selected>Select Blood Type</option>
+                        <option value="A+">A+</option>
+                        <option value="A-">A-</option>
+                        <option value="B+">B+</option>
+                        <option value="B-">B-</option>
+                        <option value="AB+">AB+</option>
+                        <option value="AB-">AB-</option>
+                        <option value="O+">O+</option>
+                        <option value="O-">O-</option>
+                      </select>
+                    </div>
+                    <div class="col-md-3">
+                      <label for="recipientOrganType" class="form-label">Organ Type</label>
+                      <select class="form-select" id="recipientOrganType" name="organType" disabled>
+                        <option value="Heart" selected>Heart</option>
+                      </select>
+                      <small class="text-muted">Currently only heart transplants are supported</small>
+                    </div>
+                    <div class="col-md-3">
+                      <label for="recipientHlaType" class="form-label">HLA Type (if known)</label>
+                      <input type="text" class="form-control" id="recipientHlaType" name="hlaType">
+                    </div>
+                    <div class="col-md-3">
+                      <label for="recipientUrgencyLevel" class="form-label">Urgency Level</label>
+                      <select class="form-select" id="recipientUrgencyLevel" name="urgencyLevel" required>
+                        <option value="" disabled selected>Select Urgency</option>
+                        <option value="Low">Low</option>
+                        <option value="Medium">Medium</option>
+                        <option value="High">High</option>
+                        <option value="Critical">Critical</option>
+                      </select>
+                    </div>
+                  </div>
+                  
+                  <div class="mb-3">
+                    <label for="recipientDiagnosis" class="form-label">Diagnosis/Medical Condition</label>
+                    <textarea class="form-control" id="recipientDiagnosis" name="diagnosis" rows="3" required></textarea>
+                  </div>
+                  
+                  <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-primary">Register Recipient</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Success Modal -->
+  <div class="modal fade" id="successModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header bg-success text-white">
+          <h5 class="modal-title">Success</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" id="success-message">
+          Registration successful!
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Error Modal -->
+  <div class="modal fade" id="errorModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header bg-danger text-white">
+          <h5 class="modal-title">Error</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" id="error-message">
+          An error occurred.
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Activate tabs through nav links
+    document.querySelectorAll('.nav-link').forEach(link => {
+      link.addEventListener('click', function(e) {
+        if (this.getAttribute('href') && this.getAttribute('href').startsWith('#')) {
+          e.preventDefault();
+          const target = this.getAttribute('href');
+          
+          // Hide all tabs
+          document.querySelectorAll('.tab-pane').forEach(tab => {
+            tab.classList.remove('show', 'active');
+          });
+          
+          // Show selected tab
+          document.querySelector(target).classList.add('show', 'active');
+        }
+      });
+    });
+    
+    // Load recent donors and recipients
+    document.addEventListener('DOMContentLoaded', async function() {
+      await loadRecentData();
+    });
+    
+    async function loadRecentData() {
+      try {
+        // Fetch donors
+        const donorResponse = await fetch('/api/donors');
+        const donorData = await donorResponse.json();
+        
+        // Fetch recipients
+        const recipientResponse = await fetch('/api/recipients');
+        const recipientData = await recipientResponse.json();
+        
+        // Render donors
+        renderDonors(donorData.data.slice(0, 5)); // Show only the 5 most recent
+        
+        // Render recipients
+        renderRecipients(recipientData.data.slice(0, 5)); // Show only the 5 most recent
+      } catch (error) {
+        console.error('Error loading data:', error);
+      }
+    }
+    
+    function renderDonors(donors) {
+      const container = document.getElementById('recent-donors');
+      container.innerHTML = '';
+      
+      if (donors.length === 0) {
+        container.innerHTML = '<p class="text-muted">No donors registered yet.</p>';
+        return;
+      }
+      
+      const table = document.createElement('table');
+      table.className = 'table table-hover';
+      
+      // Create table header
+      const thead = document.createElement('thead');
+      thead.innerHTML = `
+        <tr>
+          <th>Name</th>
+          <th>Blood Type</th>
+          <th>Status</th>
+        </tr>
+      `;
+      table.appendChild(thead);
+      
+      // Create table body
+      const tbody = document.createElement('tbody');
+      
+      donors.forEach(donor => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${donor.name}</td>
+          <td>${donor.bloodType}</td>
+          <td>
+            <span class="badge ${getBadgeClass(donor.status)}">${donor.status}</span>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+      
+      table.appendChild(tbody);
+      container.appendChild(table);
+    }
+    
+    function renderRecipients(recipients) {
+      const container = document.getElementById('recent-recipients');
+      container.innerHTML = '';
+      
+      if (recipients.length === 0) {
+        container.innerHTML = '<p class="text-muted">No recipients registered yet.</p>';
+        return;
+      }
+      
+      const table = document.createElement('table');
+      table.className = 'table table-hover';
+      
+      // Create table header
+      const thead = document.createElement('thead');
+      thead.innerHTML = `
+        <tr>
+          <th>Name</th>
+          <th>Blood Type</th>
+          <th>Urgency</th>
+          <th>Status</th>
+        </tr>
+      `;
+      table.appendChild(thead);
+      
+      // Create table body
+      const tbody = document.createElement('tbody');
+      
+      recipients.forEach(recipient => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${recipient.name}</td>
+          <td>${recipient.bloodType}</td>
+          <td>
+            <span class="badge ${getUrgencyBadgeClass(recipient.urgencyLevel)}">${recipient.urgencyLevel}</span>
+          </td>
+          <td>
+            <span class="badge ${getBadgeClass(recipient.status)}">${recipient.status}</span>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+      
+      table.appendChild(tbody);
+      container.appendChild(table);
+    }
+    
+    function getBadgeClass(status) {
+      switch (status) {
+        case 'Available':
+        case 'Waiting':
+          return 'bg-secondary';
+        case 'Matched':
+          return 'bg-warning text-dark';
+        case 'Transplanted':
+          return 'bg-success';
+        default:
+          return 'bg-primary';
+      }
+    }
+    
+    function getUrgencyBadgeClass(urgency) {
+      switch (urgency) {
+        case 'Low':
+          return 'bg-info text-dark';
+        case 'Medium':
+          return 'bg-warning text-dark';
+        case 'High':
+          return 'bg-danger';
+        case 'Critical':
+          return 'bg-dark';
+        default:
+          return 'bg-secondary';
+      }
+    }
+    
+    // Handle donor form submission
+    document.getElementById('donor-form').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const formData = {
+        name: document.getElementById('donorName').value,
+        age: document.getElementById('donorAge').value,
+        gender: document.getElementById('donorGender').value,
+        bloodType: document.getElementById('donorBloodType').value,
+        organType: document.getElementById('donorOrganType').value,
+        hlaType: document.getElementById('donorHlaType').value || 'Unknown'
+      };
+      
+      try {
+        const response = await fetch('/api/donors', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(formData)
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+          // Show success message
+          document.getElementById('success-message').textContent = 
+            data.match ? 'Donor registered successfully and matched to a recipient!' : 'Donor registered successfully!';
+          
+          const successModal = new bootstrap.Modal(document.getElementById('successModal'));
+          successModal.show();
+          
+          // Reset form
+          this.reset();
+          
+          // Reload recent data
+          await loadRecentData();
+        } else {
+          // Show error
+          document.getElementById('error-message').textContent = data.message;
+          const errorModal = new bootstrap.Modal(document.getElementById('errorModal'));
+          errorModal.show();
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        document.getElementById('error-message').textContent = 'An error occurred while registering the donor.';
+        const errorModal = new bootstrap.Modal(document.getElementById('errorModal'));
+        errorModal.show();
+      }
+    });
+    
+    // Handle recipient form submission
+    document.getElementById('recipient-form').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const formData = {
+        name: document.getElementById('recipientName').value,
+        age: document.getElementById('recipientAge').value,
+        gender: document.getElementById('recipientGender').value,
+        bloodType: document.getElementById('recipientBloodType').value,
+        organType: document.getElementById('recipientOrganType').value,
+        hlaType: document.getElementById('recipientHlaType').value || 'Unknown',
+        urgencyLevel: document.getElementById('recipientUrgencyLevel').value,
+        diagnosis: document.getElementById('recipientDiagnosis').value
+      };
+      
+      try {
+        const response = await fetch('/api/recipients', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(formData)
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+          // Show success message
+          document.getElementById('success-message').textContent = 
+            data.match ? 'Recipient registered successfully and matched to a donor!' : 'Recipient registered successfully!';
+          
+          const successModal = new bootstrap.Modal(document.getElementById('successModal'));
+          successModal.show();
+          
+          // Reset form
+          this.reset();
+          
+          // Reload recent data
+          await loadRecentData();
+        } else {
+          // Show error
+          document.getElementById('error-message').textContent = data.message;
+          const errorModal = new bootstrap.Modal(document.getElementById('errorModal'));
+          errorModal.show();
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        document.getElementById('error-message').textContent = 'An error occurred while registering the recipient.';
+        const errorModal = new bootstrap.Modal(document.getElementById('errorModal'));
+        errorModal.show();
+      }
+    });
+  </script>
+</body>
+</html> 
