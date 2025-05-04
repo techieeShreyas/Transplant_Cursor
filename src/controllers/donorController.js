@@ -17,14 +17,16 @@ exports.registerDonor = async (req, res) => {
 
     // Add hospital information from the logged-in user
     req.body.hospital = req.session.user.hospitalName;
-    
+    console.log("23")
     // Get latest block hash for blockchain integrity
     const previousHash = await Donor.getLatestBlockHash();
-    
+    console.log(req.body)
+    const hash = generateHash(req.body)
     // Create a donor with the previous hash
     const donorData = {
       ...req.body,
-      previousHash
+      previousHash,
+      hash
     };
     
     // Create the donor record with blockchain data

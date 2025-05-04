@@ -20,11 +20,12 @@ exports.registerRecipient = async (req, res) => {
     
     // Get latest block hash for blockchain integrity
     const previousHash = await Recipient.getLatestBlockHash();
-    
+    const hash = generateHash(req.body)
     // Create a recipient with the previous hash
     const recipientData = {
       ...req.body,
-      previousHash
+      previousHash,
+      hash
     };
     
     // Create the recipient record with blockchain data
