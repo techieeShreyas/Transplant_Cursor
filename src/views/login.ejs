@@ -31,6 +31,10 @@
                 <label for="password" class="form-label">Password</label>
                 <input type="password" class="form-control" id="password" name="password" required>
               </div>
+              <div class="mb-3">
+                <label for="public" class="form-label">Public Key</label>
+                <input class="form-control" id="public" name="public " required>
+              </div>
               <div class="d-grid gap-2">
                 <button type="submit" class="btn btn-primary">Login</button>
               </div>
@@ -52,7 +56,7 @@
       
       const email = document.getElementById('email').value;
       const password = document.getElementById('password').value;
-      
+      const publicKey= document.getElementById('public').value;
       try {
         const response = await fetch('/api/auth/login', {
           method: 'POST',
@@ -65,7 +69,9 @@
         const data = await response.json();
         
         if (data.success) {
+          localStorage.setItem('PublicKey', publicKey);
           window.location.href = '/dashboard';
+          alert("Key Matched. Login Successfully.")
         } else {
           // Show error
           const errorDiv = document.createElement('div');

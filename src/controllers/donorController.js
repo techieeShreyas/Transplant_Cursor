@@ -1,3 +1,4 @@
+const { exec } = require('child_process');
 const Donor = require('../models/Donor');
 const Recipient = require('../models/Recipient');
 const { generateHash } = require('../utils/blockchain');
@@ -6,6 +7,9 @@ const { findBestRecipientMatch } = require('../utils/allocation');
 // @desc    Register a new donor
 // @route   POST /api/donors
 // @access  Private
+const truffleProjectPath = "D:\\Cursor proj\\Ganache_Proj\\Pet-shop-tutorial";
+
+
 exports.registerDonor = async (req, res) => {
   try {
     if (!req.session.user) {
@@ -48,27 +52,47 @@ exports.registerDonor = async (req, res) => {
         allocatedDonor: donor._id
       });
       
+      exec('truffle test --migrate development', { cwd: truffleProjectPath }, (error, stdout, stderr) => {
+        // if (error) {
+        //   console.error(`Truffle command failed: ${error.message}`);
+        // } else {
+        //   console.log(`Truffle output:\n${stdout}`);
+        //   if (stderr) console.error(`Truffle stderr:\n${stderr}`);
+        // }
+      
+        return res.status(201).json({
+          success: true,
+          data: donor,
+          match: {
+            recipient: bestMatch.recipient,
+            score: bestMatch.score,
+            message: 'Donor has been matched to a recipient'
+          }
+        });
+      });
+      
+    }
+    
+    exec('truffle test --migrate development', { cwd: truffleProjectPath }, (error, stdout, stderr) => {
+      if (error) {
+        // console.error(`Truffle command failed: ${error.message}`);
+      } else {
+        // console.log(`Truffle output:\n${stdout}`);
+        // if (stderr) console.error(`Truffle stderr:\n${stderr}`);
+      }
+    
       return res.status(201).json({
         success: true,
         data: donor,
-        match: {
-          recipient: bestMatch.recipient,
-          score: bestMatch.score,
-          message: 'Donor has been matched to a recipient'
-        }
+        message: 'Donor registered successfully, no matching recipient found at this time'
       });
-    }
-    
-    return res.status(201).json({
-      success: true,
-      data: donor,
-      message: 'Donor registered successfully, no matching recipient found at this time'
     });
+    
   } catch (error) {
     console.error(error);
     return res.status(500).json({
-      success: false,
-      message: 'Server error'
+      // success: false,
+      // message: 'Server error'
     });
   }
 };
