@@ -5,44 +5,284 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Heart Transplant System | Login</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
   <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/splash.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f8f9fa;
+      height: 100vh;
+      overflow-x: hidden;
+    }
+    
+    .login-container {
+      height: 100vh;
+      max-width: 100%;
+      margin: 0;
+      padding: 0;
+    }
+    
+    .left-panel {
+      background: linear-gradient(135deg, #C0392B 0%, #8e44ad 100%);
+      color: white;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      height: 100%;
+    }
+    
+    .left-panel::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100" opacity="0.05"><path fill="white" d="M50,30 L70,50 L50,70 L30,50 Z"></path></svg>');
+      background-size: 150px;
+      opacity: 0.1;
+      z-index: 0;
+    }
+    
+    .login-quote {
+      font-size: 2rem;
+      font-weight: 300;
+      margin-bottom: 1.5rem;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .login-brand {
+      text-align: center;
+      margin-bottom: 2rem;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .login-brand i {
+      font-size: 3.5rem;
+      margin-bottom: 1rem;
+      filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3));
+    }
+    
+    .login-features {
+      position: relative;
+      z-index: 1;
+      margin-top: 2rem;
+    }
+    
+    .feature-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    
+    .feature-item i {
+      margin-right: 1rem;
+      font-size: 1.5rem;
+    }
+    
+    .right-panel {
+      background-color: white;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      height: 100%;
+      box-shadow: -5px 0 15px rgba(0, 0, 0, 0.05);
+    }
+    
+    .login-form-container {
+      max-width: 400px;
+      margin: 0 auto;
+      width: 100%;
+    }
+    
+    .login-title {
+      color: #2c3e50;
+      margin-bottom: 2rem;
+      font-weight: 600;
+    }
+    
+    .login-subtitle {
+      color: #7f8c8d;
+      margin-bottom: 2rem;
+    }
+    
+    .form-control {
+      height: 50px;
+      border-radius: 5px;
+      border: 1px solid #e0e0e0;
+      padding-left: 15px;
+      margin-bottom: 1.5rem;
+      font-size: 0.95rem;
+      transition: all 0.3s;
+    }
+    
+    .form-control:focus {
+      border-color: #C0392B;
+      box-shadow: 0 0 0 0.2rem rgba(192, 57, 43, 0.15);
+    }
+    
+    .btn-login {
+      background-color: #C0392B;
+      border: none;
+      height: 50px;
+      border-radius: 5px;
+      font-weight: 500;
+      transition: all 0.3s;
+    }
+    
+    .btn-login:hover {
+      background-color: #a5281e;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    .form-label {
+      color: #34495e;
+      font-weight: 500;
+      font-size: 0.9rem;
+    }
+    
+    .login-links {
+      margin-top: 2rem;
+      text-align: center;
+      color: #7f8c8d;
+    }
+    
+    .login-links a {
+      color: #C0392B;
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.3s;
+    }
+    
+    .login-links a:hover {
+      color: #a5281e;
+      text-decoration: underline;
+    }
+    
+    .input-group-text {
+      background-color: transparent;
+      border-right: none;
+    }
+    
+    .form-control.with-icon {
+      border-left: none;
+    }
+    
+    @media (max-width: 767.98px) {
+      .left-panel {
+        height: 200px;
+        padding: 1.5rem;
+      }
+      
+      .login-quote {
+        font-size: 1.5rem;
+      }
+      
+      .login-features {
+        display: none;
+      }
+      
+      .right-panel {
+        padding: 2rem 1.5rem;
+      }
+    }
+  </style>
 </head>
-<body class="bg-light">
-  <div class="container">
-    <div class="row justify-content-center mt-5">
-      <div class="col-md-6">
-        <div class="card shadow">
-          <div class="card-body">
-            <h2 class="text-center mb-4">Heart Transplant System</h2>
-            <h4 class="text-center mb-4">Hospital Login</h4>
-            
-            <% if (locals.error) { %>
-              <div class="alert alert-danger" role="alert">
-                <%= error %>
-              </div>
-            <% } %>
-            
-            <form id="login-form" action="/api/auth/login" method="POST">
-              <div class="mb-3">
-                <label for="email" class="form-label">Email</label>
-                <input type="email" class="form-control" id="email" name="email" required>
-              </div>
-              <div class="mb-3">
-                <label for="password" class="form-label">Password</label>
-                <input type="password" class="form-control" id="password" name="password" required>
-              </div>
-              <div class="mb-3">
-                <label for="public" class="form-label">Public Key</label>
-                <input class="form-control" id="public" name="public " required>
-              </div>
-              <div class="d-grid gap-2">
-                <button type="submit" class="btn btn-primary">Login</button>
-              </div>
-            </form>
-            
-            <div class="mt-3 text-center">
-              <p>Don't have an account? <a href="/register">Register Hospital</a></p>
+<body>
+  <!-- Splash Screen -->
+  <div class="splash-screen">
+    <div class="splash-overlay"></div>
+    <div class="splash-logo">
+      <i class="bi bi-heart-pulse-fill heart-icon"></i>
+    </div>
+    <div class="splash-tagline">Every Heartbeat Matters. Every Second Counts.</div>
+    <div class="loading-bar"></div>
+  </div>
+
+  <div class="container-fluid p-0 login-container">
+    <div class="row g-0 h-100">
+      <!-- Left Panel - Branding and Information -->
+      <div class="col-md-5 left-panel">
+        <div class="login-brand">
+          <i class="bi bi-heart-pulse-fill"></i>
+          <h2>Heart Transplant System</h2>
+        </div>
+        
+        <div class="login-quote">
+          "Saving Lives Through Transparent Transplants"
+        </div>
+        
+        <p>Our blockchain-based system ensures transparency, equity, and trust in the organ transplantation process.</p>
+        
+        <div class="login-features">
+          <div class="feature-item">
+            <i class="bi bi-shield-check"></i>
+            <div>Secure blockchain verification</div>
+          </div>
+          <div class="feature-item">
+            <i class="bi bi-graph-up"></i>
+            <div>Real-time matching and allocation</div>
+          </div>
+          <div class="feature-item">
+            <i class="bi bi-people"></i>
+            <div>Transparent donor-recipient pairing</div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Right Panel - Login Form -->
+      <div class="col-md-7 right-panel">
+        <div class="login-form-container">
+          <h3 class="login-title">Hospital Login</h3>
+          <p class="login-subtitle">Enter your credentials to access the dashboard</p>
+          
+          <% if (locals.error) { %>
+            <div class="alert alert-danger" role="alert">
+              <%= error %>
             </div>
+          <% } %>
+          
+          <form id="login-form" action="/api/auth/login" method="POST">
+            <div class="mb-3">
+              <label for="email" class="form-label">Email Address</label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                <input type="email" class="form-control with-icon" id="email" name="email" placeholder="Enter your email" required>
+              </div>
+            </div>
+            
+            <div class="mb-3">
+              <label for="password" class="form-label">Password</label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                <input type="password" class="form-control with-icon" id="password" name="password" placeholder="Enter your password" required>
+              </div>
+            </div>
+            
+            <div class="mb-3">
+              <label for="public" class="form-label">Public Key</label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-key"></i></span>
+                <input class="form-control with-icon" id="public" name="public" placeholder="Enter your public key" required>
+              </div>
+            </div>
+            
+            <div class="d-grid gap-2">
+              <button type="submit" class="btn btn-primary btn-login">Login</button>
+            </div>
+          </form>
+          
+          <div class="login-links">
+            <p>Don't have an account? <a href="/register">Register Hospital</a></p>
           </div>
         </div>
       </div>
@@ -50,13 +290,14 @@
   </div>
   
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/js/splash.js"></script>
   <script>
     document.getElementById('login-form').addEventListener('submit', async function(e) {
       e.preventDefault();
       
       const email = document.getElementById('email').value;
       const password = document.getElementById('password').value;
-      const publicKey= document.getElementById('public').value;
+      const publicKey = document.getElementById('public').value;
       try {
         const response = await fetch('/api/auth/login', {
           method: 'POST',
