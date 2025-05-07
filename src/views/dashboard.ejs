@@ -7,6 +7,86 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
   <link rel="stylesheet" href="/css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    .scrollable-card {
+      max-height: 300px;
+      overflow-y: auto;
+    }
+    
+    .scrollable-card table {
+      width: 100%;
+      table-layout: fixed;
+    }
+    
+    .scrollable-card table th,
+    .scrollable-card table td {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      padding: 8px;
+    }
+    
+    .scrollable-card .table-responsive {
+      overflow-x: auto;
+    }
+    
+    /* Chart styles */
+    .chart-area {
+      position: relative;
+      height: 300px;
+    }
+    
+    .chart-pie {
+      position: relative;
+      height: 250px;
+    }
+    
+    /* Card styling */
+    .bg-gradient-primary {
+      background: linear-gradient(135deg, #4e73df 0%, #224abe 100%);
+    }
+    
+    .bg-gradient-success {
+      background: linear-gradient(135deg, #1cc88a 0%, #13855c 100%);
+    }
+    
+    .bg-gradient-info {
+      background: linear-gradient(135deg, #36b9cc 0%, #258391 100%);
+    }
+    
+    .bg-gradient-danger {
+      background: linear-gradient(135deg, #e74a3b 0%, #be2617 100%);
+    }
+    
+    .border-left-primary {
+      border-left: 4px solid #4e73df;
+    }
+    
+    .border-left-success {
+      border-left: 4px solid #1cc88a;
+    }
+    
+    .border-left-info {
+      border-left: 4px solid #36b9cc;
+    }
+    
+    .border-left-warning {
+      border-left: 4px solid #f6c23e;
+    }
+    
+    .text-xs {
+      font-size: 0.7rem;
+    }
+    
+    /* Anti-black market banner */
+    .info-banner {
+      background: rgba(78, 115, 223, 0.05);
+      border-left: 5px solid #4e73df;
+      padding: 15px;
+      margin-bottom: 20px;
+    }
+  </style>
 </head>
 <body class="bg-light">
   <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
@@ -52,16 +132,167 @@
       </div>
     </div>
     
+    <!-- Mission Statement -->
+    <div class="row mb-4">
+      <div class="col-md-12">
+        <div class="card shadow border-0 bg-primary text-white">
+          <div class="card-body text-center">
+            <h3><i class="bi bi-heart-pulse-fill me-2"></i> Our Mission: Transparent Heart Transplants</h3>
+            <p class="lead mb-0">"Every heart deserves a second chance, every transplant deserves transparency."</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    
     <div class="tab-content" id="myTabContent">
       <!-- Dashboard Tab -->
       <div class="tab-pane fade show active" id="dashboard">
+        <!-- Statistics Cards -->
+        <div class="row mb-4">
+          <div class="col-md-3">
+            <div class="card shadow border-left-primary bg-gradient-primary text-white">
+              <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                  <div class="col mr-2">
+                    <div class="text-xs font-weight-bold text-uppercase mb-1">People Waiting</div>
+                    <div class="h5 mb-0 font-weight-bold" id="waiting-count">Loading...</div>
+                  </div>
+                  <div class="col-auto">
+                    <i class="bi bi-hourglass-split fa-2x"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-md-3">
+            <div class="card shadow border-left-success bg-gradient-success text-white">
+              <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                  <div class="col mr-2">
+                    <div class="text-xs font-weight-bold text-uppercase mb-1">Lives Saved</div>
+                    <div class="h5 mb-0 font-weight-bold" id="transplanted-count">Loading...</div>
+                  </div>
+                  <div class="col-auto">
+                    <i class="bi bi-check-circle-fill fa-2x"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-md-3">
+            <div class="card shadow border-left-info bg-gradient-info text-white">
+              <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                  <div class="col mr-2">
+                    <div class="text-xs font-weight-bold text-uppercase mb-1">Transparent Matches</div>
+                    <div class="h5 mb-0 font-weight-bold" id="matched-count">Loading...</div>
+                  </div>
+                  <div class="col-auto">
+                    <i class="bi bi-link-45deg fa-2x"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-md-3">
+            <div class="card shadow border-left-warning bg-gradient-danger text-white">
+              <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                  <div class="col mr-2">
+                    <div class="text-xs font-weight-bold text-uppercase mb-1">Annual Need</div>
+                    <div class="h5 mb-0 font-weight-bold">4,000+</div>
+                  </div>
+                  <div class="col-auto">
+                    <i class="bi bi-heart-fill fa-2x"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Charts Row -->
+        <div class="row mb-4">
+          <div class="col-md-8">
+            <div class="card shadow mb-4">
+              <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Heart Transplant Statistics</h5>
+                <small class="text-light">Fighting the black market through transparency</small>
+              </div>
+              <div class="card-body">
+                <div class="chart-area">
+                  <canvas id="transplantStats"></canvas>
+                </div>
+                <p class="text-center text-muted mt-3"><small>An estimated 4,000+ people lose their lives annually while waiting for heart transplants due to shortage and black market diversion.</small></p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-md-4">
+            <div class="card shadow mb-4">
+              <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Blood Type Distribution</h5>
+              </div>
+              <div class="card-body">
+                <div class="chart-pie">
+                  <canvas id="bloodTypeChart"></canvas>
+                </div>
+                <p class="text-center text-muted mt-3"><small>Understanding blood type distributions helps ensure fair and transparent matching.</small></p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Anti-Black Market Campaign -->
+        <div class="row mb-4">
+          <div class="col-md-12">
+            <div class="card shadow border-0 bg-light">
+              <div class="card-body">
+                <div class="row align-items-center">
+                  <div class="col-md-8">
+                    <h4 class="text-primary"><i class="bi bi-shield-check me-2"></i>Stopping Black Market Organ Trafficking</h4>
+                    <p>Every year, thousands of hearts are diverted to black markets, denying those on legitimate waiting lists their chance at life. Our blockchain-verified transplant system ensures:</p>
+                    <ul>
+                      <li><strong>Transparent Matching:</strong> Every match is recorded on the blockchain</li>
+                      <li><strong>Verified Origin:</strong> Each organ's source is securely documented</li>
+                      <li><strong>Fair Distribution:</strong> Algorithms ensure proper allocation based on medical need</li>
+                    </ul>
+                  </div>
+                  <div class="col-md-4 text-center">
+                    <div class="p-3">
+                      <i class="bi bi-patch-check-fill text-primary" style="font-size: 5rem;"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Inspirational Quote -->
+        <div class="row mb-4">
+          <div class="col-md-12">
+            <div class="card shadow info-banner">
+              <div class="card-body text-center">
+                <blockquote class="blockquote">
+                  <p class="mb-0"><i class="bi bi-quote me-2"></i>In a world where organs are sometimes treated as commodities, we stand for transparency, ethics, and hope. Every heartbeat matters.<i class="bi bi-quote ms-2"></i></p>
+                  <footer class="blockquote-footer mt-2">Heart Transplant System Mission</footer>
+                </blockquote>
+              </div>
+            </div>
+          </div>
+        </div>
+        
         <div class="row">
           <div class="col-md-6">
             <div class="card shadow mb-4">
               <div class="card-header bg-primary text-white">
                 <h5 class="mb-0">Recent Donors</h5>
               </div>
-              <div class="card-body" id="recent-donors">
+              <div class="card-body scrollable-card" id="recent-donors">
                 <div class="spinner-border text-primary" role="status">
                   <span class="visually-hidden">Loading...</span>
                 </div>
@@ -73,7 +304,7 @@
               <div class="card-header bg-primary text-white">
                 <h5 class="mb-0">Recent Recipients</h5>
               </div>
-              <div class="card-body" id="recent-recipients">
+              <div class="card-body scrollable-card" id="recent-recipients">
                 <div class="spinner-border text-primary" role="status">
                   <span class="visually-hidden">Loading...</span>
                 </div>
@@ -313,14 +544,141 @@
         const recipientResponse = await fetch('/api/recipients');
         const recipientData = await recipientResponse.json();
         
-        // Render donors
-        renderDonors(donorData.data.slice(0, 5)); // Show only the 5 most recent
+        // Render donors - show all available data
+        renderDonors(donorData.data);
         
-        // Render recipients
-        renderRecipients(recipientData.data.slice(0, 5)); // Show only the 5 most recent
+        // Render recipients - show all available data
+        renderRecipients(recipientData.data);
+        
+        // Update statistics counters
+        updateStatistics(donorData.data, recipientData.data);
+        
+        // Initialize charts
+        initializeCharts(donorData.data, recipientData.data);
       } catch (error) {
         console.error('Error loading data:', error);
       }
+    }
+    
+    function updateStatistics(donors, recipients) {
+      // Count waiting recipients
+      const waitingCount = recipients.filter(r => r.status === 'Waiting').length;
+      document.getElementById('waiting-count').textContent = waitingCount;
+      
+      // Count transplanted
+      const transplantedCount = recipients.filter(r => r.status === 'Transplanted').length;
+      document.getElementById('transplanted-count').textContent = transplantedCount;
+      
+      // Count matched
+      const matchedCount = recipients.filter(r => r.status === 'Matched').length;
+      document.getElementById('matched-count').textContent = matchedCount;
+    }
+    
+    function initializeCharts(donors, recipients) {
+      // Heart Transplant Statistics Chart
+      const statsCtx = document.getElementById('transplantStats');
+      const statsChart = new Chart(statsCtx, {
+        type: 'bar',
+        data: {
+          labels: ['Waiting List Deaths', 'Black Market Cases', 'Successful Transplants', 'Donors Available'],
+          datasets: [{
+            label: 'Annual Statistics',
+            data: [4000, 2200, 2500, 2800],
+            backgroundColor: [
+              'rgba(255, 99, 132, 0.5)',
+              'rgba(54, 57, 64, 0.5)',
+              'rgba(75, 192, 192, 0.5)',
+              'rgba(54, 162, 235, 0.5)'
+            ],
+            borderColor: [
+              'rgba(255, 99, 132, 1)',
+              'rgba(54, 57, 64, 1)',
+              'rgba(75, 192, 192, 1)',
+              'rgba(54, 162, 235, 1)'
+            ],
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            title: {
+              display: true,
+              text: 'Annual Heart Transplant Statistics (Global Estimates)'
+            },
+            legend: {
+              display: false
+            },
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  return `Count: ${context.raw}`;
+                }
+              }
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              title: {
+                display: true,
+                text: 'Number of People'
+              }
+            }
+          }
+        }
+      });
+      
+      // Blood Type Distribution Chart
+      const bloodCtx = document.getElementById('bloodTypeChart');
+      const bloodChart = new Chart(bloodCtx, {
+        type: 'pie',
+        data: {
+          labels: ['O+', 'O-', 'A+', 'A-', 'B+', 'B-', 'AB+', 'AB-'],
+          datasets: [{
+            data: [38, 7, 34, 6, 9, 2, 3, 1],
+            backgroundColor: [
+              'rgba(255, 99, 132, 0.7)',
+              'rgba(255, 159, 64, 0.7)',
+              'rgba(255, 205, 86, 0.7)',
+              'rgba(75, 192, 192, 0.7)',
+              'rgba(54, 162, 235, 0.7)',
+              'rgba(153, 102, 255, 0.7)',
+              'rgba(201, 203, 207, 0.7)',
+              'rgba(255, 99, 132, 0.4)'
+            ],
+            borderColor: [
+              'rgb(255, 99, 132)',
+              'rgb(255, 159, 64)',
+              'rgb(255, 205, 86)',
+              'rgb(75, 192, 192)',
+              'rgb(54, 162, 235)',
+              'rgb(153, 102, 255)',
+              'rgb(201, 203, 207)',
+              'rgb(255, 99, 132)'
+            ],
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            title: {
+              display: true,
+              text: 'General Population Blood Type Distribution (%)'
+            },
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  return `${context.label}: ${context.raw}%`;
+                }
+              }
+            }
+          }
+        }
+      });
     }
     
     function renderDonors(donors) {
@@ -332,6 +690,9 @@
         return;
       }
       
+      const tableResponsive = document.createElement('div');
+      tableResponsive.className = 'table-responsive';
+      
       const table = document.createElement('table');
       table.className = 'table table-hover';
       
@@ -340,7 +701,10 @@
       thead.innerHTML = `
         <tr>
           <th>Name</th>
+          <th>Age</th>
+          <th>Gender</th>
           <th>Blood Type</th>
+          <th>HLA Type</th>
           <th>Status</th>
         </tr>
       `;
@@ -353,7 +717,10 @@
         const tr = document.createElement('tr');
         tr.innerHTML = `
           <td>${donor.name}</td>
+          <td>${donor.age}</td>
+          <td>${donor.gender}</td>
           <td>${donor.bloodType}</td>
+          <td>${donor.hlaType || 'Unknown'}</td>
           <td>
             <span class="badge ${getBadgeClass(donor.status)}">${donor.status}</span>
           </td>
@@ -362,7 +729,8 @@
       });
       
       table.appendChild(tbody);
-      container.appendChild(table);
+      tableResponsive.appendChild(table);
+      container.appendChild(tableResponsive);
     }
     
     function renderRecipients(recipients) {
@@ -374,6 +742,9 @@
         return;
       }
       
+      const tableResponsive = document.createElement('div');
+      tableResponsive.className = 'table-responsive';
+      
       const table = document.createElement('table');
       table.className = 'table table-hover';
       
@@ -382,7 +753,11 @@
       thead.innerHTML = `
         <tr>
           <th>Name</th>
+          <th>Age</th>
+          <th>Gender</th>
           <th>Blood Type</th>
+          <th>HLA Type</th>
+          <th>Diagnosis</th>
           <th>Urgency</th>
           <th>Status</th>
         </tr>
@@ -396,7 +771,11 @@
         const tr = document.createElement('tr');
         tr.innerHTML = `
           <td>${recipient.name}</td>
+          <td>${recipient.age}</td>
+          <td>${recipient.gender}</td>
           <td>${recipient.bloodType}</td>
+          <td>${recipient.hlaType || 'Unknown'}</td>
+          <td>${truncateText(recipient.diagnosis, 30)}</td>
           <td>
             <span class="badge ${getUrgencyBadgeClass(recipient.urgencyLevel)}">${recipient.urgencyLevel}</span>
           </td>
@@ -408,7 +787,8 @@
       });
       
       table.appendChild(tbody);
-      container.appendChild(table);
+      tableResponsive.appendChild(table);
+      container.appendChild(tableResponsive);
     }
     
     function getBadgeClass(status) {
@@ -438,6 +818,11 @@
         default:
           return 'bg-secondary';
       }
+    }
+    
+    function truncateText(text, maxLength) {
+      if (!text) return '';
+      return text.length > maxLength ? text.substring(0, maxLength) + '...' : text;
     }
     
     // Handle donor form submission
