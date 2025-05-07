@@ -337,6 +337,22 @@
     <div class="tab-content" id="myTabContent">
       <!-- Dashboard Tab -->
       <div class="tab-pane fade show active" id="dashboard">
+        <!-- List View Buttons -->
+        <div class="row mb-4">
+          <div class="col-12">
+            <div class="card shadow">
+              <div class="card-body d-flex justify-content-center gap-3">
+                <button type="button" class="btn btn-primary" id="view-donor-list">
+                  <i class="bi bi-heart me-2"></i> View Donor List
+                </button>
+                <button type="button" class="btn btn-primary" id="view-recipient-list">
+                  <i class="bi bi-people me-2"></i> View Recipient List
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- Statistics Cards -->
         <div class="row mb-4">
           <div class="col-md-3 col-sm-6 mb-3 mb-sm-0">
@@ -811,13 +827,265 @@
     </div>
   </div>
   
+  <!-- Donor List Modal -->
+  <div class="modal fade" id="donorListModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+      <div class="modal-content border-0 shadow">
+        <div class="modal-header bg-gradient-primary text-white border-0">
+          <h5 class="modal-title"><i class="bi bi-heart me-2"></i>Complete Donor List</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body p-0">
+          <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0" id="donor-list-table">
+              <thead class="bg-light">
+                <tr>
+                  <th>Name</th>
+                  <th>Age</th>
+                  <th>Gender</th>
+                  <th>Blood Type</th>
+                  <th>HLA Type</th>
+                  <th>Registration Date</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="donor-list-body">
+                <tr>
+                  <td colspan="7" class="text-center py-4">
+                    <div class="spinner-border text-primary" role="status">
+                      <span class="visually-hidden">Loading...</span>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="modal-footer border-0">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recipient List Modal -->
+  <div class="modal fade" id="recipientListModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+      <div class="modal-content border-0 shadow">
+        <div class="modal-header bg-gradient-primary text-white border-0">
+          <h5 class="modal-title"><i class="bi bi-people me-2"></i>Complete Recipient List</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body p-0">
+          <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0" id="recipient-list-table">
+              <thead class="bg-light">
+                <tr>
+                  <th>Name</th>
+                  <th>Age</th>
+                  <th>Gender</th>
+                  <th>Blood Type</th>
+                  <th>HLA Type</th>
+                  <th>Diagnosis</th>
+                  <th>Urgency</th>
+                  <th>Registration Date</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="recipient-list-body">
+                <tr>
+                  <td colspan="9" class="text-center py-4">
+                    <div class="spinner-border text-primary" role="status">
+                      <span class="visually-hidden">Loading...</span>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="modal-footer border-0">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script>
     // Display public key from localStorage
     document.addEventListener('DOMContentLoaded', function() {
       const publicKey = localStorage.getItem('PublicKey');
       document.getElementById('publicKeyDisplay').textContent = publicKey || 'Not available';
+
+      // Set up donor and recipient list button event listeners
+      document.getElementById('view-donor-list').addEventListener('click', showDonorList);
+      document.getElementById('view-recipient-list').addEventListener('click', showRecipientList);
     });
+
+    // Donor List Modal
+    function showDonorList() {
+      // Show the modal
+      const donorListModal = new bootstrap.Modal(document.getElementById('donorListModal'));
+      donorListModal.show();
+      
+      // Fetch all donors and populate the table
+      fetch('/api/donors')
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            populateDonorListTable(data.data);
+          } else {
+            // Handle error
+            document.getElementById('donor-list-body').innerHTML = `
+              <tr>
+                <td colspan="7" class="text-center py-4 text-danger">
+                  <i class="bi bi-exclamation-circle fs-3 mb-3 d-block"></i>
+                  Failed to load donor list.
+                </td>
+              </tr>
+            `;
+          }
+        })
+        .catch(error => {
+          console.error('Error fetching donor list:', error);
+          document.getElementById('donor-list-body').innerHTML = `
+            <tr>
+              <td colspan="7" class="text-center py-4 text-danger">
+                <i class="bi bi-exclamation-circle fs-3 mb-3 d-block"></i>
+                An error occurred while loading the donor list.
+              </td>
+            </tr>
+          `;
+        });
+    }
+
+    // Recipient List Modal
+    function showRecipientList() {
+      // Show the modal
+      const recipientListModal = new bootstrap.Modal(document.getElementById('recipientListModal'));
+      recipientListModal.show();
+      
+      // Fetch all recipients and populate the table
+      fetch('/api/recipients')
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            populateRecipientListTable(data.data);
+          } else {
+            // Handle error
+            document.getElementById('recipient-list-body').innerHTML = `
+              <tr>
+                <td colspan="9" class="text-center py-4 text-danger">
+                  <i class="bi bi-exclamation-circle fs-3 mb-3 d-block"></i>
+                  Failed to load recipient list.
+                </td>
+              </tr>
+            `;
+          }
+        })
+        .catch(error => {
+          console.error('Error fetching recipient list:', error);
+          document.getElementById('recipient-list-body').innerHTML = `
+            <tr>
+              <td colspan="9" class="text-center py-4 text-danger">
+                <i class="bi bi-exclamation-circle fs-3 mb-3 d-block"></i>
+                An error occurred while loading the recipient list.
+              </td>
+            </tr>
+          `;
+        });
+    }
+
+    function populateDonorListTable(donors) {
+      const tbody = document.getElementById('donor-list-body');
+      
+      if (donors.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="7" class="text-center py-4 text-muted">
+              <i class="bi bi-info-circle fs-3 mb-3 d-block"></i>
+              No donors have been registered yet.
+            </td>
+          </tr>
+        `;
+        return;
+      }
+      
+      tbody.innerHTML = '';
+      
+      donors.forEach(donor => {
+        const row = document.createElement('tr');
+        
+        // Format date if available
+        let registrationDate = 'N/A';
+        if (donor.createdAt) {
+          registrationDate = new Date(donor.createdAt).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
+          });
+        }
+        
+        row.innerHTML = `
+          <td>${donor.name}</td>
+          <td>${donor.age}</td>
+          <td>${donor.gender}</td>
+          <td>${donor.bloodType}</td>
+          <td>${donor.hlaType || 'Unknown'}</td>
+          <td>${registrationDate}</td>
+          <td><span class="badge ${getBadgeClass(donor.status)}">${donor.status}</span></td>
+        `;
+        
+        tbody.appendChild(row);
+      });
+    }
+
+    function populateRecipientListTable(recipients) {
+      const tbody = document.getElementById('recipient-list-body');
+      
+      if (recipients.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="9" class="text-center py-4 text-muted">
+              <i class="bi bi-info-circle fs-3 mb-3 d-block"></i>
+              No recipients have been registered yet.
+            </td>
+          </tr>
+        `;
+        return;
+      }
+      
+      tbody.innerHTML = '';
+      
+      recipients.forEach(recipient => {
+        const row = document.createElement('tr');
+        
+        // Format date if available
+        let registrationDate = 'N/A';
+        if (recipient.createdAt) {
+          registrationDate = new Date(recipient.createdAt).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
+          });
+        }
+        
+        row.innerHTML = `
+          <td>${recipient.name}</td>
+          <td>${recipient.age}</td>
+          <td>${recipient.gender}</td>
+          <td>${recipient.bloodType}</td>
+          <td>${recipient.hlaType || 'Unknown'}</td>
+          <td>${truncateText(recipient.diagnosis, 30)}</td>
+          <td><span class="badge ${getUrgencyBadgeClass(recipient.urgencyLevel)}">${recipient.urgencyLevel}</span></td>
+          <td>${registrationDate}</td>
+          <td><span class="badge ${getBadgeClass(recipient.status)}">${recipient.status}</span></td>
+        `;
+        
+        tbody.appendChild(row);
+      });
+    }
 
     // Activate tabs through nav links
     document.querySelectorAll('.nav-link').forEach(link => {
